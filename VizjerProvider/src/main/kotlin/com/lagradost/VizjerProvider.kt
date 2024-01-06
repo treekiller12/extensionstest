@@ -50,41 +50,36 @@ class VizjerProvider : MainAPI() {
         return HomePageResponse(categories)
     }
 
-override suspend fun search(query: String): List<SearchResponse> {
-    val url = "$mainUrl/wyszukaj?phrase=$query"
-    val document = app.get(url, interceptor = interceptor).document
-    val lists = document.select(".films-page > .main-content > .video-list > .list > div.item")
-    
-    val movies = lists.filter { it.hasClass("movie") }
-    val series = lists.filter { it.hasClass("serie") }
-
-    if (movies.isEmpty() && series.isEmpty()) return ArrayList()
-
-    fun getVideos(type: TvType, items: Elements): List<SearchResponse> {
-        return items.mapNotNull { i ->
-            val a = i.selectFirst(".thumbnail a") ?: return@mapNotNull null
-            val href = a.attr("href")
-            val img = i.selectFirst(".thumbnail img[src]")?.attr("src")?.replace("/thumb/", "/big/")
-            val name = i.selectFirst(".title")?.text() ?: return@mapNotNull null
-
-            if (type === TvType.TvSeries) {
-                TvSeriesSearchResponse(
-                    name,
-                    properUrl(href)!!,
-                    this.name,
-                    type,
-                    properUrl(img)!!,
-                    null,
-                    posterHeaders = interceptor.getCookieHeaders(url).toMap()
-                )
-            } else {
-                MovieSearchResponse(name, properUrl(href)!!, this.name, type, properUrl(img)!!, null, posterHeaders = interceptor.getCookieHeaders(url).toMap())
+    override suspend fun search(query: String): List<SearchResponse> {
+        val url = "$mainUrl/wyszukaj?phrase=$query"
+        val document = app.get(url, interceptor = interceptor).document
+        val lists = document.select("#advanced-search > div")
+        val movies = lists[1].select("div:not(.clearfix)")
+        val series = lists[3].select("div:not(.clearfix)")
+        if (movies.isEmpty() && series.isEmpty()) return ArrayList()
+        fun getVideos(type: TvType, items: Elements): List<SearchResponse> {
+            return items.mapNotNull { i ->
+                val href = i.selectFirst("a")?.attr("href") ?: return@mapNotNull null
+                val img =
+                    i.selectFirst("a > img[src]")?.attr("src")?.replace("/thumb/", "/big/")
+                val name = i.selectFirst(".title")?.text() ?: return@mapNotNull null
+                if (type === TvType.TvSeries) {
+                    TvSeriesSearchResponse(
+                        name,
+                        properUrl(href)!!,
+                        this.name,
+                        type,
+                        properUrl(img)!!,
+                        null,
+                        posterHeaders = interceptor.getCookieHeaders(url).toMap()
+                    )
+                } else {
+                    MovieSearchResponse(name, properUrl(href)!!, this.name, type, properUrl(img)!!, null, posterHeaders = interceptor.getCookieHeaders(url).toMap())
+                }
             }
         }
+        return getVideos(TvType.Movie, movies) + getVideos(TvType.TvSeries, series)
     }
-
-    return getVideos(TvType.Movie, movies) + getVideos(TvType.TvSeries, series)
-}
 
     override suspend fun load(url: String): LoadResponse {
         val document = app.get(url, interceptor = interceptor).document

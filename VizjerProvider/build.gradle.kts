@@ -1,13 +1,13 @@
 // use an integer for version numbers
-version = 2
+version = 4
 
 
 cloudstream {
     language = "pl"
     // All of these properties are optional, you can safely remove them
 
-    // description = "EkinoProvider"
-    authors = listOf("TreeKiller")
+    // description = "Lorem Ipsum"
+    authors = listOf("Cloudburst")
 
     /**
      * Status int as the following:
@@ -22,5 +22,5 @@ cloudstream {
         "TvSeries"
     )
 
-    iconUrl = "https://www.google.com/s2/favicons?domain=https://ekino-tv.pl/&sz=%size%"
+    iconUrl = "https://www.google.com/s2/favicons?domain=vizjer.pl&sz=%size%"
 }

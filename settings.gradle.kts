@@ -1,8 +1,39 @@
 rootProject.name = "CloudstreamPlugins"
 
-// This file sets what projects are included. All new projects should get automatically included unless specified in "disabled" variable.
+// This file sets what projects are included. Every time you add a new project, you must add it
+// to the includes below.
 
-val disabled = listOf<String>()
+// Plugins are included like this
+val disabled = listOf<String>(
+    "EgyBestProvider",
+    "FaselHDProvider",
+    "AkwamProvider",
+    "MyCimaProvider", 
+    "AnimeIndoProvider", 
+    "AnimeSailProvider", 
+    "Anizm", 
+    "DramaidProvider", 
+    "DubokuProvider", 
+    "Gomunimeis", 
+    "GomunimeProvider", 
+    "Hdfilmcehennemi", 
+    "HDrezkaProvider", 
+    "IdlixProvider", 
+    "KuramanimeProvider", 
+    "KuronimeProvider", 
+    "LayarKacaProvider", 
+    "MultiplexProvider", 
+    "NeonimeProvider", 
+    "NontonAnimeIDProvider", 
+    "OploverzProvider", 
+    "OtakudesuProvider", 
+    "PhimmoichillProvider", 
+    "RebahinProvider", 
+    "TocanimeProvider", 
+    "UakinoProvider", 
+    "UseeTv", 
+    "YomoviesProvider"
+)
 
 File(rootDir, ".").eachDir { dir ->
     if (!disabled.contains(dir.name) && File(dir, "build.gradle.kts").exists()) {

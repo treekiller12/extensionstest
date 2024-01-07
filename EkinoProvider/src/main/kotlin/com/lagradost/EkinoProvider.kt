@@ -124,6 +124,22 @@ class EkinoProvider : MainAPI() {
             plot
         )
     }
+    
+    private fun properUrl(inUrl: String?): String? {
+        if (inUrl == null) return null
+    
+        // Sprawdź, czy URL jest już poprawny (zawiera schemat http lub https)
+        if (inUrl.startsWith("http://") || inUrl.startsWith("https://")) {
+            return inUrl
+        }
+    
+        return fixUrl(
+            inUrl.replace(
+                "^URL".toRegex(),
+                "/"
+            )
+        )
+    }
 
     override suspend fun loadLinks(
         data: String,

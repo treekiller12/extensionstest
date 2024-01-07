@@ -54,9 +54,9 @@ class EkinoProvider : MainAPI() {
     override suspend fun search(query: String): List<SearchResponse> {
         val url = "$mainUrl/search/qf/?q=$query"
         val document = app.get(url).document
-        val lists = document.select(".mainWrap > div")
-        val movies = lists[1].lists[0].select("div:not(h4)")
-        val series = lists[1].lists[1].select("div:not(h4)")
+        val lists = document.select(".mainWrap > .col-md-12 movie-wrap > div")
+        val movies = lists[0].select("div:not(h3)")
+        val series = lists[1].select("div:not(h3)")
         if (movies.isEmpty() && series.isEmpty()) return ArrayList()
         fun getVideos(type: TvType, items: Elements): List<SearchResponse> {
             return items.mapNotNull { i ->

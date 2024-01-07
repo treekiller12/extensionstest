@@ -6,7 +6,6 @@ import com.lagradost.cloudstream3.utils.AppUtils.tryParseJson
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.loadExtractor
 import org.jsoup.Jsoup
-import org.jsoup.select.Elements
 
 class EkinoProvider : MainAPI() {
     override var mainUrl = "https://ekino-tv.pl"
@@ -18,12 +17,12 @@ class EkinoProvider : MainAPI() {
         TvType.TvSeries
     )
 
-    override suspend fun getMainPage(page: Int, request : MainPageRequest): HomePageResponse {
+    override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val document = app.get(mainUrl).document
-        val lists = document.select("#item-list,#series-list")
+        val lists = document.select("#item-list, #series-list")
         val categories = ArrayList<HomePageList>()
         for (l in lists) {
-            val title = capitalizeString(l.parent()!!.select("h3").text().lowercase())
+            val title = capitalizeString(l.parent()?.select("h3")?.text()?.lowercase() ?: "")
             val items = l.select(".poster").map { i ->
                 val name = i.select("a[href]").attr("title")
                 val href = i.select("a[href]").attr("href")
@@ -54,7 +53,7 @@ class EkinoProvider : MainAPI() {
     override suspend fun search(query: String): List<SearchResponse> {
         val url = "$mainUrl/search/qf/?q=$query"
         val document = app.get(url).document
-        val lists = document.select(".mainWrap > .col-md-12 movie-wrap > div")
+        val lists = document.select(".mainWrap > .col-md-12.movie-wrap > div")
         val movies = lists[0].select("div:not(h3)")
         val series = lists[1].select("div:not(h3)")
         if (movies.isEmpty() && series.isEmpty()) return ArrayList()

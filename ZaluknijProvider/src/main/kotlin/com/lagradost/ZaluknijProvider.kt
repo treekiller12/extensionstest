@@ -10,7 +10,7 @@ import org.jsoup.select.Elements
 
 class Zaluknij1Provider : ZaluknijProvider() {
     override var mainUrl = "https://zaluknij.xyz/"
-    override var name = "Zaluknij.xyz"
+    override var name = "Zalj.xyz"
 }
 
 open class ZaluknijProvider : MainAPI() {
